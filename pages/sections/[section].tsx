@@ -9,6 +9,14 @@ import {
   Article,
   Section,
 } from '@ircsignpost/signpost-base/dist/src/topic-with-articles';
+import {
+  getArticle,
+  getArticlesForSection,
+  getCategoriesWithSections,
+  getSection,
+  getSections,
+  getTranslationsFromDynamicContent,
+} from '@ircsignpost/signpost-base/dist/src/zendesk';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
@@ -30,7 +38,7 @@ import {
   getZendeskLocaleId,
 } from '../../lib/locale';
 import { getHeaderLogoProps } from '../../lib/logo';
-import { getMenuItems } from '../../lib/menu';
+import { getFooterItems, getMenuItems } from '../../lib/menu';
 import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   SECTION_PLACEHOLDERS,
@@ -39,15 +47,6 @@ import {
   populateSectionStrings,
 } from '../../lib/translations';
 import { getZendeskMappedUrl, getZendeskUrl } from '../../lib/url';
-// TODO Use real Zendesk API implementation.
-import {
-  getArticle,
-  getArticlesForSection,
-  getCategoriesWithSections,
-  getSection,
-  getSections,
-  getTranslationsFromDynamicContent,
-} from '../../lib/zendesk-fake';
 
 interface CategoryProps {
   currentLocale: Locale;
@@ -58,6 +57,7 @@ interface CategoryProps {
   // A list of |MenuOverlayItem|s to be displayed in the header and side menu.
   menuOverlayItems: MenuOverlayItem[];
   strings: SectionStrings;
+  footerLinks?: MenuOverlayItem[];
 }
 
 export default function Category({
@@ -68,6 +68,7 @@ export default function Category({
   section,
   menuOverlayItems,
   strings,
+  footerLinks,
 }: CategoryProps) {
   const { publicRuntimeConfig } = getConfig();
 
@@ -89,6 +90,7 @@ export default function Category({
         />
       }
       strings={strings}
+      footerLinks={footerLinks}
       signpostVersion={publicRuntimeConfig?.version}
     />
   );
@@ -240,6 +242,11 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     !!aboutUsArticle
   );
 
+  const footerLinks = getFooterItems(
+    populateMenuOverlayStrings(dynamicContent),
+    categories
+  );
+
   return {
     props: {
       currentLocale,
@@ -249,6 +256,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
       section,
       menuOverlayItems,
       strings,
+      footerLinks,
     },
     revalidate: REVALIDATION_TIMEOUT_SECONDS,
   };

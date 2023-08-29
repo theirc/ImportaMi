@@ -6,6 +6,10 @@ import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overla
 import {
   CategoryWithSections,
   ZendeskCategory,
+  getArticle,
+  getCategories,
+  getCategoriesWithSections,
+  getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
@@ -30,7 +34,7 @@ import {
   getZendeskLocaleId,
 } from '../lib/locale';
 import { getHeaderLogoProps } from '../lib/logo';
-import { getMenuItems } from '../lib/menu';
+import { getFooterItems, getMenuItems } from '../lib/menu';
 import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   ERROR_DYNAMIC_CONTENT_PLACEHOLDERS,
@@ -38,13 +42,6 @@ import {
   populateMenuOverlayStrings,
 } from '../lib/translations';
 import { getZendeskMappedUrl, getZendeskUrl } from '../lib/url';
-// TODO Use real Zendesk API implementation.
-import {
-  getArticle,
-  getCategories,
-  getCategoriesWithSections,
-  getTranslationsFromDynamicContent,
-} from '../lib/zendesk-fake';
 
 interface Custom404Props {
   currentLocale: Locale;
@@ -53,6 +50,7 @@ interface Custom404Props {
   strings: Custom404Strings;
   // A list of |MenuOverlayItem|s to be displayed in the header and side menu.
   menuOverlayItems: MenuOverlayItem[];
+  footerLinks?: MenuOverlayItem[];
 }
 
 export default function Custom404({
@@ -60,6 +58,7 @@ export default function Custom404({
   title,
   strings,
   menuOverlayItems,
+  footerLinks,
 }: Custom404Props) {
   const { publicRuntimeConfig } = getConfig();
 
@@ -73,6 +72,7 @@ export default function Custom404({
       headerLogoProps={getHeaderLogoProps(currentLocale)}
       searchBarIndex={SEARCH_BAR_INDEX}
       signpostVersion={publicRuntimeConfig?.version}
+      footerLinks={footerLinks}
       cookieBanner={
         <CookieBanner
           strings={strings.cookieBannerStrings}
@@ -129,13 +129,17 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     categories,
     !!aboutUsArticle
   );
-
+  const footerLinks = getFooterItems(
+    populateMenuOverlayStrings(dynamicContent),
+    categories
+  );
   return {
     props: {
       currentLocale,
       strings,
       menuOverlayItems,
       categories,
+      footerLinks,
       title: strings.errorStrings.subtitle?.concat(' - ', SITE_TITLE),
     },
     revalidate: REVALIDATION_TIMEOUT_SECONDS,

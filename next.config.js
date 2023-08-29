@@ -7,7 +7,7 @@ const nextConfig = {
   swcMinify: true,
   // Keep in sync with locales configured in /lib/locale.ts.
   i18n: {
-    locales: ['default', 'en-us' /* TODO */],
+    locales: ['default', 'en-us', 'es'],
     defaultLocale: 'default',
     localeDetection: false,
   },
@@ -22,15 +22,14 @@ const nextConfig = {
       },
     ];
   },
-  // TODO: add images url to whitelist them
-  // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: 'https',
-  //       hostname: 'signpost-greece.zendesk.com',
-  //     },
-  //   ],
-  // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'signpost-us-importami.zendesk.com',
+      },
+    ],
+  },
   publicRuntimeConfig: {
     version: pack.dependencies['@ircsignpost/signpost-base'],
   },
@@ -43,10 +42,9 @@ module.exports = withLess({
       // See full list of Ant styles here:
       // https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less
       modifyVars: {
-        // TODO: Update theme colors
-        'primary-color': '#51258F',
-        'secondary-color': '#854ECA',
-        'accent-color': '#13C2C2',
+        'primary-color': '#1C998B',
+        'secondary-color': '#1C998B',
+        'accent-color': '#1C998B',
         'info-color': '@accent-color',
         'alert-info-bg-color': '@accent-color',
         // Override Ant typography.
@@ -68,14 +66,14 @@ module.exports = withLess({
           'linear-gradient(@secondary-color, @primary-color)',
         'header-banner-text-color': 'white',
         // Set search styles.
-        'search-icon-color': 'black',
+        'search-icon-color': 'white',
         'search-icon-bg-color': '@accent-color',
         // Set card styles.
         'card-padding-base': '16px',
         'home-page-card-icon-color': '#141414',
         // Set cookie banner styles.
         'cookie-banner-text': '#000',
-        'cookie-banner-back': '@accent-color',
+        'cookie-banner-back': '#F9D779',
         'link-color': '#0000ee',
         'link-hover-color': '#0000eea8',
       },
