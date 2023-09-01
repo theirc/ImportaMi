@@ -88,5 +88,5 @@ export const SEARCH_RESULTS_PAGE_INDEX: AlgoliaSearchIndex = {
 };
 
 export const DIRECTUS_AUTH_TOKEN = process.env.DIRECTUS_TOKEN ?? '';
-export const DIRECTUS_COUNTRY_ID = 0; // TODO: replace with the country ID from directus
-export const DIRECTUS_INSTANCE = ''; // TODO: add the url from the directus instance you want to fetch data from
+export const DIRECTUS_COUNTRY_ID = 14;
+export const DIRECTUS_INSTANCE = 'https://directus-irc.azurewebsites.net/';
