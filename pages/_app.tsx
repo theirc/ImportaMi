@@ -20,6 +20,7 @@ import '@ircsignpost/signpost-base/styles/search-results-page.less';
 import '@ircsignpost/signpost-base/styles/select-menu.less';
 import '@ircsignpost/signpost-base/styles/service-map.less';
 import '@ircsignpost/signpost-base/styles/map.less';
+import '@ircsignpost/signpost-base/styles/service-content.less';
 import '@ircsignpost/signpost-base/styles/service-list.less';
 import '@ircsignpost/signpost-base/styles/cookie-banner.less';
 import '@ircsignpost/signpost-base/styles/article-content.less';
