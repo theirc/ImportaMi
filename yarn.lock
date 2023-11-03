@@ -811,10 +811,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ircsignpost/signpost-base@15.36.0":
-  version "15.36.0"
-  resolved "https://registry.yarnpkg.com/@ircsignpost/signpost-base/-/signpost-base-15.36.0.tgz#a1fded67f5d9f6daceb58d952604dc97782b284a"
-  integrity sha512-P8Znp3hdiAkFfvYPjWuvUcM88chobbQDnvk9pWejZTq2lIr3YfMbkMXbquj4Apf5MfWSvtRuUhMxn5Wl2RGrSA==
+"@ircsignpost/signpost-base@15.40.0":
+  version "15.40.0"
+  resolved "https://registry.yarnpkg.com/@ircsignpost/signpost-base/-/signpost-base-15.40.0.tgz#23d13abfe80690d15573c62dd759cc87c679953c"
+  integrity sha512-Qbl0f7BQb9oYxR2KXX0WN8Gr1IDJ6fcPCuRJi4P/4TBu8+rCvMV4WRiuk75Ap86AAJha2jpBqwKhArLuR7O4pQ==
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
@@ -3033,7 +3033,7 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
-follow-redirects@^1.14.0, follow-redirects@^1.14.9:
+follow-redirects@^1.14.0:
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
