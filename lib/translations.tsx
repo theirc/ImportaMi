@@ -75,8 +75,8 @@ export const COMMON_DYNAMIC_CONTENT_PLACEHOLDERS = [
 export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   // Header banner and social media strings.
   'signpost_importami_mission_statement',
-  'default_banner_social_media_title',
-  'default_banner_social_media_description',
+  'signpost_importami_social_media_title',
+  'signpost_importami_social_media_description',
   'default_banner_facebook_title',
   'default_banner_messenger_title',
   'default_banner_whatsapp_title',
@@ -158,9 +158,9 @@ export function populateHeaderBannerStrings(dynamicContent: {
 }): HeaderBannerStrings {
   return {
     welcomeTitle: dynamicContent['signpost_importami_mission_statement'],
-    socialMediaTitle: dynamicContent['default_banner_social_media_title'],
+    socialMediaTitle: dynamicContent['signpost_importami_social_media_title'],
     socialMediaDescription:
-      dynamicContent['default_banner_social_media_description'],
+      dynamicContent['signpost_importami_social_media_description'],
   };
 }
 
