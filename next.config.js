@@ -28,6 +28,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'signpost-us-importami.zendesk.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'directus-irc.azurewebsites.net',
+      },
     ],
   },
   publicRuntimeConfig: {
