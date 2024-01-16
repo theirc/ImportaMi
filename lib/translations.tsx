@@ -9,6 +9,7 @@ import { HeaderBannerStrings } from '@ircsignpost/signpost-base/dist/src/header-
 import { HomePageStrings } from '@ircsignpost/signpost-base/dist/src/home-page';
 import { CardsListStrings } from '@ircsignpost/signpost-base/dist/src/home-page-cards-list';
 import { PopupStrings } from '@ircsignpost/signpost-base/dist/src/map';
+import { NewsStrings } from '@ircsignpost/signpost-base/dist/src/news-page';
 import { RecentArticlesStrings } from '@ircsignpost/signpost-base/dist/src/recent-articles';
 import { SearchBarStrings } from '@ircsignpost/signpost-base/dist/src/search-bar';
 import { SearchResultsPageStrings } from '@ircsignpost/signpost-base/dist/src/search-results-page';
@@ -70,6 +71,7 @@ export const COMMON_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_saturday_label',
   'default_sunday_label',
   'default_menu_services_title',
+  'signpost_importami_recent_articles_title',
 ];
 
 export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
@@ -105,7 +107,7 @@ export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_view_service_label',
   'default_select_topic',
   'default_select_subtopic',
-  'default_recent_articles_title',
+  'signpost_importami_recent_articles_title',
   'default_service_type_label',
   'default_providers_label',
   'default_accessibility_label',
@@ -118,6 +120,8 @@ export const CATEGORY_PLACEHOLDERS = [
 ];
 
 export const SECTION_PLACEHOLDERS = ['default_select_topic'];
+
+export const NEWS_PLACEHOLDERS = ['signpost_importami_recent_articles_title'];
 
 export const SEARCH_RESULTS_PLACEHOLDERS = [
   'default_search_results_found',
@@ -279,6 +283,7 @@ export function populateArticleContentStrings(dynamicContent: {
   return {
     textReaderTitle: dynamicContent['default_article_reader_title'],
     shareButtonStrings: getShareButtonStrings(dynamicContent),
+    homeBreadcrumbString: 'Home',
   };
 }
 
@@ -290,6 +295,7 @@ export function populateMenuOverlayStrings(dynamicContent: {
     information: dynamicContent['default_information_title'],
     about: dynamicContent['default_menu_about_title'],
     services: dynamicContent['default_menu_services_title'],
+    news: dynamicContent['signpost_importami_recent_articles_title'],
   };
 }
 
@@ -323,6 +329,7 @@ export function populateCategoryStrings(dynamicContent: {
     searchBarStrings: populateSearchBarStrings(dynamicContent),
     footerStrings: populateFooterStrings(dynamicContent),
     selectSubTopicLabel: dynamicContent['default_select_subtopic'],
+    homeBreadcrumbString: 'Home',
   };
 }
 
@@ -334,6 +341,17 @@ export function populateSectionStrings(dynamicContent: {
     selectTopicLabel: getSelectTopicLabel(dynamicContent),
     searchBarStrings: populateSearchBarStrings(dynamicContent),
     footerStrings: populateFooterStrings(dynamicContent),
+    homeBreadcrumbString: 'Home',
+  };
+}
+
+export function populateNewsStrings(dynamicContent: {
+  [key: string]: string;
+}): NewsStrings {
+  return {
+    newsTitleString: dynamicContent['signpost_importami_recent_articles_title'],
+    footerStrings: populateFooterStrings(dynamicContent),
+    cookieBannerStrings: populateCookieBannerStrings(dynamicContent),
   };
 }
 
@@ -454,7 +472,8 @@ export function populateRecentArticlesStrings(dynamicContent: {
   [key: string]: string;
 }): RecentArticlesStrings {
   return {
-    recentArticlesTitle: dynamicContent['default_recent_articles_title'],
+    recentArticlesTitle:
+      dynamicContent['signpost_importami_recent_articles_title'],
     lastUpdatedLabel: dynamicContent['default_last_updated'],
     selectTopicLabel: dynamicContent['default_select_topic'],
     selectSubTopicLabel: dynamicContent['default_select_subtopic'],
