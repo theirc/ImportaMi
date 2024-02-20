@@ -56,7 +56,7 @@ export function getMenuItems(
     items.push({
       key: 'about',
       label: strings.about,
-      href: `/articles/${ABOUT_US_ARTICLE_ID}`,
+      href: `/sections/16754961189661`,
     });
   }
   return items;
