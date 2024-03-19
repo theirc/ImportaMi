@@ -5,7 +5,7 @@ import logoEnUs from '../public/importa-mi-logo.png';
 
 export const getHeaderLogoProps = (currentLocale: Locale): LogoProps => {
   let imgSrc: string;
-  switch (currentLocale.url) {
+  switch (currentLocale?.url) {
     case 'en-us':
     default:
       imgSrc = logoEnUs.src;

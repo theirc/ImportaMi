@@ -11,6 +11,7 @@ import {
   getArticle,
   getArticlesForSection,
   getCategories,
+  getCategoriesWithSections,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
 import { GetStaticProps } from 'next';
@@ -22,10 +23,10 @@ import {
   CATEGORIES_TO_HIDE,
   CATEGORY_ICON_NAMES,
   GOOGLE_ANALYTICS_IDS,
+  MENU_CATEGORIES_TO_HIDE,
   REVALIDATION_TIMEOUT_SECONDS,
   SEARCH_BAR_INDEX,
   SITE_TITLE,
-  USE_CAT_SEC_ART_CONTENT_STRUCTURE,
   ZENDESK_AUTH_HEADER,
 } from '../../lib/constants';
 import {
@@ -39,6 +40,7 @@ import { getFooterItems, getMenuItems } from '../../lib/menu';
 import {
   CATEGORY_PLACEHOLDERS,
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
+  SECTION_PLACEHOLDERS,
   getLastUpdatedLabel,
   populateCategoryStrings,
   populateFilterSelectStrings,
@@ -134,16 +136,6 @@ async function getStaticParams() {
 }
 
 export async function getStaticPaths() {
-  if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
-    // Category page does not exist in this type of content structure.
-    // All paths under categories should return 404
-    // (https://nextjs.org/docs/api-reference/data-fetching/get-static-paths#fallback-false).
-    return {
-      paths: [],
-      fallback: false,
-    };
-  }
-
   const categoryParams = await getStaticParams();
 
   return {
@@ -162,10 +154,6 @@ function getStringPath(category: string, locale: string): string {
 }
 
 export async function getStringPaths(): Promise<string[]> {
-  if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
-    // Category page does not exist in this type of content structure.
-    return [];
-  }
   const params = await getStaticParams();
   return params.map((param) => getStringPath(param.category, param.locale));
 }
@@ -184,6 +172,14 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     getZendeskUrl(),
     ZENDESK_AUTH_HEADER
   );
+
+  const sectionDynamicContent = await getTranslationsFromDynamicContent(
+    getZendeskLocaleId(currentLocale),
+    COMMON_DYNAMIC_CONTENT_PLACEHOLDERS.concat(SECTION_PLACEHOLDERS),
+    getZendeskUrl(),
+    ZENDESK_AUTH_HEADER
+  );
+
   const strings: CategoryStrings = populateCategoryStrings(dynamicContent);
 
   const categories = (
@@ -207,12 +203,6 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     ZENDESK_AUTH_HEADER
   );
 
-  const menuOverlayItems = getMenuItems(
-    populateMenuOverlayStrings(dynamicContent),
-    categories,
-    !!aboutUsArticle
-  );
-
   const sections = await getSectionsForCategory(
     currentLocale,
     Number(params?.category),
@@ -227,9 +217,21 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     };
   });
 
+  const menuCategories = await getCategoriesWithSections(
+    currentLocale,
+    getZendeskUrl(),
+    (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
+  );
+
+  const menuOverlayItems = getMenuItems(
+    populateMenuOverlayStrings(sectionDynamicContent),
+    menuCategories,
+    !!aboutUsArticle
+  );
+
   const footerLinks = getFooterItems(
-    populateMenuOverlayStrings(dynamicContent),
-    categories
+    populateMenuOverlayStrings(sectionDynamicContent),
+    menuCategories
   );
 
   return {

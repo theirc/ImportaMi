@@ -49,8 +49,8 @@ export function getMenuItems(
   });
   items.push({
     key: 'news',
-    label: strings.news,
-    href: '/news',
+    label: 'News',
+    href: '/categories/4409778008599',
   });
   if (includeAbout) {
     items.push({

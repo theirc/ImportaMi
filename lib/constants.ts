@@ -42,6 +42,10 @@ export const CATEGORIES_TO_HIDE: number[] = [
   4409778008599, 4410571554839, 4410629239959,
 ];
 
+export const MENU_CATEGORIES_TO_HIDE: number[] = [
+  4410571554839, 4410629239959, 4409778008599,
+];
+
 // A map from a locale code to Zendesk locale id used for dynamic content translations.
 // https://developer.zendesk.com/api-reference/ticketing/account-configuration/locales/
 // Keep in sync with locales configured in /next.config.js.
