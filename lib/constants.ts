@@ -37,6 +37,7 @@ export const SECTION_ICON_NAMES: { [key: string]: string } = {
   '5285344407831': 'perm_device_information', // Basic needs icon
   '17534956935837': 'diversity_2', // Welcome
   '18075114207389': 'feed', // News
+  '17535115635229': 'work', //work
 };
 
 // A list of category IDs that the site should not display.
