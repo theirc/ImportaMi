@@ -10,7 +10,7 @@ export const COUNTRY_ID = 31;
 export const REVALIDATION_TIMEOUT_SECONDS: number = 1 * 60 * 60;
 
 // The "about us" article ID.
-export const ABOUT_US_ARTICLE_ID: number = 17534950208669;
+export const ABOUT_US_ARTICLE_ID: number = 4410571645847;
 
 // The information hierary of the website.
 // Set to true for the category -> section -> article hierarchy, similar to that of United for Ukraine.
@@ -35,6 +35,8 @@ export const SECTION_ICON_NAMES: { [key: string]: string } = {
   '9617846339357': 'diversity_1', // LGBTQ support icon
   '9238220386205': 'record_voice_over', // Life in the US icon
   '5285344407831': 'perm_device_information', // Basic needs icon
+  '17534956935837': 'diversity_2', // Welcome
+  '18075114207389': 'feed', // News
 };
 
 // A list of category IDs that the site should not display.
