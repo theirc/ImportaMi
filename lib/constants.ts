@@ -19,7 +19,7 @@ export const ABOUT_US_ARTICLE_ID: number = 4410571645847;
 export const USE_CAT_SEC_ART_CONTENT_STRUCTURE = true;
 
 //Set to true to enable the Recent Articles component
-export const USE_RECENT_ARTICLES = true;
+export const USE_RECENT_ARTICLES = false;
 
 // A mapping from category ID to a Material icon for that category.
 export const CATEGORY_ICON_NAMES: { [key: string]: string } = {
