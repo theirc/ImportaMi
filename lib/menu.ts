@@ -52,13 +52,6 @@ export function getMenuItems(
     label: strings.news,
     href: '/news',
   });
-  if (includeAbout) {
-    items.push({
-      key: 'about',
-      label: strings.about,
-      href: `/sections/4410571570199`,
-    });
-  }
   return items;
 }
 
