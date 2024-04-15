@@ -38,6 +38,7 @@ import {
   DIRECTUS_COUNTRY_ID,
   DIRECTUS_INSTANCE,
   GOOGLE_ANALYTICS_IDS,
+  MENU_CATEGORIES_TO_HIDE,
   REVALIDATION_TIMEOUT_SECONDS,
   SEARCH_BAR_INDEX,
   SECTION_ICON_NAMES,
@@ -143,6 +144,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   );
 
   let categories: ZendeskCategory[] | CategoryWithSections[];
+  let menuCategories: ZendeskCategory[] | CategoryWithSections[];
   if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
     categories = await getCategoriesWithSections(
       currentLocale,
@@ -154,11 +156,20 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
         (s) => (s.icon = SECTION_ICON_NAMES[s.id] || 'help_outline')
       );
     });
+    menuCategories = await getCategoriesWithSections(
+      currentLocale,
+      getZendeskUrl(),
+      (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
+    );
   } else {
     categories = await getCategories(currentLocale, getZendeskUrl());
     categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id));
     categories.forEach(
       (c) => (c.icon = CATEGORY_ICON_NAMES[c.id] || 'help_outline')
+    );
+    menuCategories = await getCategories(currentLocale, getZendeskUrl());
+    menuCategories = menuCategories.filter(
+      (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
     );
   }
 
@@ -173,7 +184,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   const menuOverlayItems = getMenuItems(
     populateMenuOverlayStrings(dynamicContent),
-    categories,
+    menuCategories,
     !!aboutUsArticle
   );
 
@@ -287,7 +298,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   const footerLinks = getFooterItems(
     populateMenuOverlayStrings(dynamicContent),
-    categories
+    menuCategories
   );
 
   return {
