@@ -50,7 +50,7 @@ export function getMenuItems(
   items.push({
     key: 'news',
     label: strings.news,
-    href: '/news',
+    href: '/sections/18075114207389',
   });
   return items;
 }
