@@ -38,6 +38,8 @@ export const SECTION_ICON_NAMES: { [key: string]: string } = {
   '17534956935837': 'diversity_2', // Welcome
   '18075114207389': 'feed', // News
   '17535115635229': 'work', //work
+  '17561396470301': 'language', // Privacy Policy icon
+  '19072816019613': 'lock', // Cookie Notice icon
 };
 
 // A list of category IDs that the site should not display.
