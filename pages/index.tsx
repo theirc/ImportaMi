@@ -1,13 +1,10 @@
 import { Directus } from '@directus/sdk';
 import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner';
 import {
-  DirectusServiceCategory,
   getDirectusAccessibility,
   getDirectusArticles,
-  getDirectusCities,
   getDirectusPopulationsServed,
   getDirectusProviders,
-  getDirectusRegions,
   getDirectusServiceCategories,
 } from '@ircsignpost/signpost-base/dist/src/directus';
 import { HeaderBannerStrings } from '@ircsignpost/signpost-base/dist/src/header-banner';
@@ -18,10 +15,8 @@ import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overla
 import { ServiceMapProps } from '@ircsignpost/signpost-base/dist/src/service-map';
 import {
   CategoryWithSections,
-  ZendeskArticle,
   ZendeskCategory,
   getArticle,
-  getArticles,
   getCategories,
   getCategoriesWithSections,
   getTranslationsFromDynamicContent,
@@ -43,7 +38,6 @@ import {
   SECTION_ICON_NAMES,
   SITE_TITLE,
   USE_CAT_SEC_ART_CONTENT_STRUCTURE,
-  USE_RECENT_ARTICLES,
   ZENDESK_AUTH_HEADER,
 } from '../lib/constants';
 import {
@@ -77,8 +71,6 @@ interface HomeProps {
   // The HTML text of the About Us category shown on the home page.
   aboutUsTextHtml: string;
   categories: ZendeskCategory[] | CategoryWithSections[];
-  articles: ZendeskArticle[];
-  articleCategories: CategoryWithSections[];
   footerLinks?: MenuOverlayItem[];
 }
 
@@ -91,8 +83,6 @@ const Home: NextPage<HomeProps> = ({
   serviceMapProps,
   aboutUsTextHtml,
   categories,
-  articles,
-  articleCategories,
   footerLinks,
 }) => {
   const { publicRuntimeConfig } = getConfig();
@@ -113,14 +103,8 @@ const Home: NextPage<HomeProps> = ({
       serviceMapProps={serviceMapProps}
       aboutUsTextHtml={aboutUsTextHtml}
       categories={categories}
-      hasRecentArticles={USE_RECENT_ARTICLES}
-      CATEGORIES_TO_HIDE={[]}
-      CATEGORY_ICON_NAMES={CATEGORY_ICON_NAMES}
-      SECTION_ICON_NAMES={SECTION_ICON_NAMES}
-      articles={articles}
-      articleCategories={articleCategories}
-      signpostVersion={publicRuntimeConfig?.version}
       footerLinks={footerLinks}
+      signpostVersion={publicRuntimeConfig?.version}
       cookieBanner={
         <CookieBanner
           strings={strings.cookieBannerStrings}
@@ -132,7 +116,7 @@ const Home: NextPage<HomeProps> = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const currentLocale: Locale = getLocaleFromCode(locale ?? 'en-us');
+  const currentLocale: Locale = getLocaleFromCode(locale ?? 'es');
   let dynamicContent = await getTranslationsFromDynamicContent(
     getZendeskLocaleId(currentLocale),
     COMMON_DYNAMIC_CONTENT_PLACEHOLDERS.concat(
@@ -147,18 +131,18 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     categories = await getCategoriesWithSections(
       currentLocale,
       getZendeskUrl(),
-      (c) => !CATEGORIES_TO_HIDE.includes(c.id)
+      (c) => !CATEGORIES_TO_HIDE.includes(c?.id)
     );
     categories.forEach(({ sections }) => {
       sections.forEach(
-        (s) => (s.icon = SECTION_ICON_NAMES[s.id] || 'help_outline')
+        (s) => (s.icon = SECTION_ICON_NAMES[s?.id] || 'help_outline')
       );
     });
   } else {
     categories = await getCategories(currentLocale, getZendeskUrl());
-    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id));
+    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c?.id));
     categories.forEach(
-      (c) => (c.icon = CATEGORY_ICON_NAMES[c.id] || 'help_outline')
+      (c) => (c.icon = CATEGORY_ICON_NAMES[c?.id] || 'help_outline')
     );
   }
 
@@ -177,6 +161,11 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     !!aboutUsArticle
   );
 
+  const footerLinks = getFooterItems(
+    populateMenuOverlayStrings(dynamicContent),
+    categories
+  );
+
   const strings = populateHomePageStrings(dynamicContent);
 
   const directus = new Directus(DIRECTUS_INSTANCE);
@@ -188,28 +177,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     currentLocale.directus
   );
 
-  const providersArray = await getDirectusProviders(
-    directus,
-    DIRECTUS_COUNTRY_ID
-  );
-
-  const uniqueProvidersIdsSet = new Set(services.flatMap((x) => x.provider.id));
-  const uniqueProvidersIdsArray = Array.from(uniqueProvidersIdsSet);
-
-  const providers = providersArray
-    .filter((x) => uniqueProvidersIdsArray.includes(x.id))
-    .sort((a, b) => a.name?.normalize().localeCompare(b.name?.normalize()));
-
-  const enhancedServices = services.map((service) => {
-    const providerDetails = providers.find(
-      (provider) => provider.id === service.provider.id
-    );
-    return providerDetails
-      ? { ...service, provider: providerDetails }
-      : service;
-  });
-
-  enhancedServices?.sort((a, b) =>
+  services?.sort((a, b) =>
     a.name?.normalize().localeCompare(b.name?.normalize())
   );
 
@@ -229,45 +197,20 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   );
   const uniquePopulationsIdsArray = Array.from(uniquePopulationsIdsSet);
 
-  const uniqueRegionsIds = new Set(services.map((service) => service.region));
-
-  const uniqueCitiesIds = new Set(services.map((service) => service.city));
-
-  const regions = await getDirectusRegions(
-    Array.from(uniqueRegionsIds),
-    directus
+  const uniqueProvidersIdsSet = new Set(
+    services.flatMap((x) => x.provider?.id)
   );
-  const cities = await getDirectusCities(Array.from(uniqueCitiesIds), directus);
+  const uniqueProvidersIdsArray = Array.from(uniqueProvidersIdsSet);
 
-  const fetchServiceTypes = await getDirectusServiceCategories(directus);
-  const uniqueTypesSet = new Set<number>();
-  services.forEach((service) => {
-    service.categories.forEach((category) => {
-      uniqueTypesSet.add(category.service_categories_id.id);
-    });
-  });
+  const serviceTypes = await getDirectusServiceCategories(directus);
+  const providersArray = await getDirectusProviders(
+    directus,
+    DIRECTUS_COUNTRY_ID
+  );
 
-  const usedSubcategoryIds = new Set<number>();
-  services.forEach((service) => {
-    service.subcategories.forEach((subcategory) => {
-      usedSubcategoryIds.add(subcategory.services_subcategories_id);
-    });
-  });
-
-  const serviceTypes = fetchServiceTypes
-    .filter((type) => uniqueTypesSet.has(type.id))
-    .map((category) => {
-      const filteredSubcategories = category.services_subcategories.filter(
-        (subcategory) =>
-          usedSubcategoryIds.has(subcategory?.services_subcategories_id?.id)
-      );
-
-      return {
-        ...category,
-        services_subcategories: filteredSubcategories,
-      } as DirectusServiceCategory;
-    });
-
+  const providers = providersArray
+    .filter((x) => uniqueProvidersIdsArray.includes(x.id))
+    .sort((a, b) => a.name?.normalize().localeCompare(b.name?.normalize()));
   const populations = await getDirectusPopulationsServed(
     uniquePopulationsIdsArray,
     directus
@@ -275,19 +218,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const accessibility = await getDirectusAccessibility(
     uniqueAccessibilityIdsArray,
     directus
-  );
-
-  const articles = await getArticles(currentLocale, getZendeskUrl());
-
-  const articleCategories = await getCategoriesWithSections(
-    currentLocale,
-    getZendeskUrl(),
-    (c) => c.id == 4409778008599
-  );
-
-  const footerLinks = getFooterItems(
-    populateMenuOverlayStrings(dynamicContent),
-    categories
   );
 
   return {
@@ -298,7 +228,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       headerBannerStrings: populateHeaderBannerStrings(dynamicContent),
       socialMediaLinks: populateSocialMediaLinks(dynamicContent),
       serviceMapProps: {
-        services: enhancedServices,
+        services,
         shareButton: getShareButtonStrings(dynamicContent),
         serviceTypes,
         providers,
@@ -306,13 +236,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
         accessibility,
         showDirectus: true,
         currentLocale,
-        regions,
-        cities,
       },
       categories,
       aboutUsTextHtml,
-      articles,
-      articleCategories,
       footerLinks,
     },
     revalidate: REVALIDATION_TIMEOUT_SECONDS,
